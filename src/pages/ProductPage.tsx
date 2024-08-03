@@ -1,5 +1,10 @@
 import * as React from 'react';
+import { ThemeProvider, Container, Box } from '@mui/material';
 import ProductList from '../components/Products/ProductList';
+import getPageTheme from '@/theme/getPageTheme';  
+import {PaletteMode } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
+import { createTheme } from '@mui/material/styles';
 
 const products = [
   {
@@ -19,10 +24,16 @@ const products = [
 ];
 
 export default function ProductsPage() {
+  const [mode] = React.useState<PaletteMode>('light');
+  const pageTheme = createTheme(getPageTheme(mode));
   return (
-    <div>
-      <h1>Products</h1>
-      <ProductList products={products} />
-    </div>
+    <ThemeProvider theme={pageTheme}>
+      <CssBaseline />
+      <Container>
+        <Box sx={{ padding: '20px' }}>
+          <ProductList products={products} />
+        </Box>
+      </Container>
+    </ThemeProvider>
   );
 }

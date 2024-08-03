@@ -1,40 +1,49 @@
 import React from 'react';
-import { Card, CardContent, Typography, CardMedia, CardActionArea } from '@mui/material';
+import { Paper, Typography, Button } from '@mui/material';
+
+type Product = {
+  id: number;
+  productName: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+};
 
 type ProductItemProps = {
-  product: {
-    id: number;
-    productName: string;
-    description: string;
-    price: number;
-    imageUrl: string;
-  };
+  product: Product;
   onClick: () => void;
 };
 
 const ProductItem: React.FC<ProductItemProps> = ({ product, onClick }) => {
   return (
-    <Card onClick={onClick} style={{ cursor: 'pointer', maxWidth: 345, margin: '10px', backgroundColor: '#f5f5f5' }}>
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          height="140"
-          image={product.imageUrl}
-          alt={product.productName}
-        />
-        <CardContent>
-          <Typography variant="h5" component="div">
-            {product.productName}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {product.description}
-          </Typography>
-          <Typography variant="h6" component="div">
-            ${product.price}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
+    <Paper
+      elevation={3}
+      sx={{
+        padding: '16px',
+        cursor: 'pointer',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',  
+        minWidth: '150px',  
+        height: '400px',   
+        overflow: 'hidden',   
+        textAlign: 'center'
+      }}
+      onClick={onClick}
+    >
+      <Typography variant="h6" sx={{ marginBottom: '8px' }}>{product.productName}</Typography>
+      <img
+        src={product.imageUrl}
+        alt={product.productName}
+        style={{ width: '100%', height: '200px', objectFit: 'cover', marginBottom: '8px' }}  
+      />
+      <Typography variant="body2" sx={{ marginBottom: '8px' }}>{product.description}</Typography>
+      <Typography variant="body1" sx={{ marginBottom: '8px' }}>${product.price.toFixed(2)}</Typography>
+      <Button variant="contained" color="primary" onClick={onClick}>
+        Edit
+      </Button>
+    </Paper>
   );
 };
 
