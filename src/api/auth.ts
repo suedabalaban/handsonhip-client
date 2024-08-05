@@ -42,34 +42,45 @@ export const logout = async () => {
   }
 };
 
-export const register = async (email: string, password: string) => {
+export const register = async (user: { email: string; password: string; firstName: string; lastName: string; address: string; country: string; city: string; }) => {
+  try {
     const response = await fetch(`${apiUrl}/register`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
     });
 
-    if (response.ok) {
-        return await response.text();
-    } else {
-        throw new Error('Registration failed');
+    if (!response.ok) {
+      throw new Error('Registration failed');
     }
+
+    return await response.text();
+  } catch (error) {
+    console.error('Registration error:', error);
+    throw error;
+  }
 };
 
+
 export const status = async (sessionId: number) => {
+  try {
     const response = await fetch(`${apiUrl}/status`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ sessionId }),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ sessionId }),
     });
 
-    if (response.ok) {
-        return await response.text();
-    } else {
-        throw new Error('Status check failed');
+    if (!response.ok) {
+      throw new Error('Status check failed');
     }
+
+    return await response.text();
+  } catch (error) {
+    console.error('Status check error:', error);
+    throw error;
+  }
 };
