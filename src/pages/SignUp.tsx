@@ -12,7 +12,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirecting to SignUp page
+import { useNavigate } from 'react-router-dom';
+import { register } from '../api/auth';
 
 function Copyright(props: any) {
   return (
@@ -27,18 +28,33 @@ function Copyright(props: any) {
   );
 }
 
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-  const navigate = useNavigate(); // Initialize useNavigate
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+    // Construct user object from form data
+    const user = {
+      firstName: data.get('firstName') as string,
+      lastName: data.get('lastName') as string,
+      email: data.get('email') as string,
+      password: data.get('password') as string,
+      address: data.get('address') as string,
+      country: data.get('country') as string,
+      city: data.get('city') as string,
+    };
+
+    try {
+      await register(user); // Pass the user object
+      navigate('/login');
+    } catch (error) {
+      console.error('Registration error:', error);
+      alert('Registration failed. Please try again.');
+    }
   };
 
   return (
@@ -104,6 +120,34 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="address"
+                  label="Address"
+                  id="address"
+                  autoComplete="street-address"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="country"
+                  label="Country"
+                  id="country"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="city"
+                  label="City"
+                  id="city"
+                />
+              </Grid>
+              <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
                   label="I want to receive inspiration, marketing promotions and updates via email."
@@ -121,7 +165,7 @@ export default function SignUp() {
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link onClick={() => navigate('/login')} variant="body2">
-                    Already have an account? Sign in
+                  Already have an account? Sign in
                 </Link>
               </Grid>
             </Grid>
