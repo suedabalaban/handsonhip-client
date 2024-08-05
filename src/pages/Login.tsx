@@ -13,16 +13,18 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { login } from '../api/auth'; // Import yolu güncellenmiş
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirecting to SignUp page
 
 const defaultTheme = createTheme();
 
 export default function Login() {
+  const navigate = useNavigate(); // Initialize useNavigate
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = data.get('email') as string;
     const password = data.get('password') as string;
-
+    
     try {
       await login(email, password);
       console.log('Login successful');
@@ -91,9 +93,9 @@ export default function Login() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
+              <Link onClick={() => navigate('/signup')} variant="body2">
+                Don't have an account? Sign Up
+              </Link>
               </Grid>
             </Grid>
           </Box>
