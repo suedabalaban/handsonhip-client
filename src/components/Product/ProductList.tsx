@@ -1,64 +1,81 @@
-import React, { useState } from 'react';
-import { Grid, Dialog, Paper, Typography } from '@mui/material';
-import ProductItem from './ProductItem';
-import ProductEditForm from 'src/components/Product/ProductEditForm';
+import React from 'react';
+import { Grid, Card, CardContent, Typography, CardMedia, Box, Button } from '@mui/material';
 
-type Product = {
+interface Product {
   id: number;
-  productName: string;
+  name: string;
   description: string;
-  price: number;
   imageUrl: string;
-};
+  price: number;
+}
 
-// Props tipini tanımlayın
-type ProductListProps = {
+interface ProductListProps {
   products: Product[];
-};
+  onEditClick: (product: Product) => void; // Ensure onEditClick uses Product
+}
 
-const ProductList: React.FC<ProductListProps> = ({ products }) => {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  const handleProductClick = (product: Product) => {
-    setSelectedProduct(product);
-    setIsDialogOpen(true);
-  };
-
-  const handleDialogClose = () => {
-    setIsDialogOpen(false);
-    setSelectedProduct(null);
-  };
-
-  const handleProductSave = (updatedProduct: Product) => {
-    // Ürün güncelleme işlemi burada yapılabilir
-    setIsDialogOpen(false);
-    setSelectedProduct(null);
-  };
-
+const ProductList: React.FC<ProductListProps> = ({ products, onEditClick }) => {
   return (
-    <Grid container spacing={3}>
-      {products && products.length > 0 ? (
-        products.map((product) => (
-          <Grid item key={product.id} xs={12} sm={6} md={4}>
-            <Paper elevation={3}>
-              <ProductItem product={product} onClick={() => handleProductClick(product)} />
-            </Paper>
-          </Grid>
-        ))
-      ) : (
-        <Typography variant="h6">No products available.</Typography>
-      )}
-      <Dialog open={isDialogOpen} onClose={handleDialogClose}>
-        {selectedProduct && (
-          <ProductEditForm
-            open={isDialogOpen}
-            product={selectedProduct}
-            onClose={handleDialogClose}
-            onSave={handleProductSave}
-          />
-        )}
-      </Dialog>
+    <Grid container spacing={2}>
+      {products.map((product) => (
+        <Grid item key={product.id} xs={12} sm={6} md={4}>
+          <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+            <Box sx={{ position: 'relative' }}>
+              <CardMedia
+                component="img"
+                height="160"
+                image={product.imageUrl}
+                alt={product.name}
+                sx={{ objectFit: 'cover' }}
+              />
+            </Box>
+            <CardContent
+              sx={{ 
+                flexGrow: 1, 
+                display: 'flex', 
+                flexDirection: 'column', 
+                justifyContent: 'space-between',
+                padding: '12px',
+                '&:last-child': { paddingBottom: '12px' }
+              }}
+            >
+              <Typography
+                variant="h6"
+                sx={{ marginBottom: '4px' }}
+              >
+                {product.name}
+              </Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  display: '-webkit-box',
+                  WebkitBoxOrient: 'vertical',
+                  WebkitLineClamp: 2,
+                  lineHeight: '1.2em',
+                  height: '2.4em',
+                  marginBottom: '8px'
+                }}
+              >
+                {product.description}
+              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                ${product.price.toFixed(2)}
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ marginTop: 'auto' }}
+                onClick={() => onEditClick(product)}
+              >
+                Edit
+              </Button>
+            </CardContent>
+          </Card>
+        </Grid>
+      ))}
     </Grid>
   );
 };
