@@ -2,7 +2,7 @@ const apiUrl: string = process.env.REACT_APP_API_URL || '';
 
 export const login = async (email: string, password: string) => {
   try {
-    const response = await fetch(`${apiUrl}/login`, {
+    const response = await fetch(`${apiUrl}/member/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -24,7 +24,7 @@ export const login = async (email: string, password: string) => {
 
 export const logout = async () => {
   try {
-    const response = await fetch(`${apiUrl}/logout`, {
+    const response = await fetch(`${apiUrl}/member/logout`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ export const logout = async () => {
 
 export const register = async (user: { email: string; password: string; firstName: string; lastName: string; address: string; country: string; city: string; }) => {
   try {
-    const response = await fetch(`${apiUrl}/register`, {
+    const response = await fetch(`${apiUrl}/member/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ export const register = async (user: { email: string; password: string; firstNam
 
 export const status = async (sessionId: number) => {
   try {
-    const response = await fetch(`${apiUrl}/status`, {
+    const response = await fetch(`${apiUrl}/member/status`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
