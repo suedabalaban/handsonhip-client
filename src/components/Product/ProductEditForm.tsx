@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, Typography  } from '@mui/material';
-import axios from 'axios';
+import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, Typography, Box } from '@mui/material';
 
 interface Product {
-  id: number;
-  name: string;
+  productID: number;
+  productName: string;
   description: string;
   imageUrl: string;
   price: number;
@@ -12,13 +11,15 @@ interface Product {
 
 interface ProductEditFormProps {
   open: boolean;
-  product: Product | null; 
+  product: Product | null;
   onClose: () => void;
   onSave: (updatedProduct: Product) => Promise<void>;
+  onDelete: (productID: number) => Promise<void>;
 }
 
-const ProductEditForm: React.FC<ProductEditFormProps> = ({ open, product, onClose, onSave }) => {
+const ProductEditForm: React.FC<ProductEditFormProps> = ({ open, product, onClose, onSave, onDelete }) => {
   const [editedProduct, setEditedProduct] = useState<Product | null>(product);
+  const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
 
   useEffect(() => {
     setEditedProduct(product);
@@ -35,9 +36,26 @@ const ProductEditForm: React.FC<ProductEditFormProps> = ({ open, product, onClos
   };
 
   const handleSave = async () => {
-    if (editedProduct) {
+    if (editedProduct && editedProduct.productID) {
       await onSave(editedProduct);
+    } else {
+      console.error('Edited Product ID is missing');
     }
+  };
+
+  const handleDelete = async () => {
+    if (editedProduct && editedProduct.productID) {
+      await onDelete(editedProduct.productID);
+      onClose(); // Close dialog after deletion
+    }
+  };
+
+  const handleConfirmDelete = () => {
+    setConfirmDelete(true);
+  };
+
+  const handleCancelDelete = () => {
+    setConfirmDelete(false);
   };
 
   return (
@@ -49,12 +67,12 @@ const ProductEditForm: React.FC<ProductEditFormProps> = ({ open, product, onClos
             <TextField
               autoFocus
               margin="dense"
-              name="name"
+              name="productName"
               label="Name"
               type="text"
               fullWidth
               variant="standard"
-              value={editedProduct.name}
+              value={editedProduct.productName}
               onChange={handleChange}
             />
             <TextField
@@ -91,10 +109,26 @@ const ProductEditForm: React.FC<ProductEditFormProps> = ({ open, product, onClos
         ) : (
           <Typography>Loading...</Typography>
         )}
+        {confirmDelete && (
+          <Box sx={{ marginTop: 2, marginBottom: 2, padding: 2, border: '1px solid red', borderRadius: 2 }}>
+            <Typography color="error">Are you sure you want to delete this product?</Typography>
+            <Button onClick={handleDelete} color="error" sx={{ marginRight: 1 }}>
+              Confirm Delete
+            </Button>
+            <Button onClick={handleCancelDelete}>Cancel</Button>
+          </Box>
+        )}
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleSave}>Save</Button>
+      <DialogActions style={{ justifyContent: 'space-between' }}>
+        {!confirmDelete && (
+          <Button onClick={handleConfirmDelete} color="error" style={{ marginRight: 'auto' }}>
+            Delete
+          </Button>
+        )}
+        <div>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={handleSave}>Save</Button>
+        </div>
       </DialogActions>
     </Dialog>
   );
