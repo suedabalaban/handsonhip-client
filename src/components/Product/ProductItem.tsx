@@ -2,8 +2,8 @@ import React from 'react';
 import { Paper, Typography, Button } from '@mui/material';
 
 type Product = {
-  id: number;
-  name: string;
+  productID: number;
+  productName: string;
   description: string;
   price: number;
   imageUrl: string;
@@ -35,21 +35,21 @@ const ProductItem: React.FC<ProductItemProps> = ({ product, onClick }) => {
     >
       <img
         src={product.imageUrl}
-        alt={product.name}
+        alt={product.productName}
         style={{ width: '100%', height: '160px', objectFit: 'cover', marginBottom: '8px' }}
       />
       <Typography
         variant="h6"
         sx={{
           marginBottom: '4px',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-          height: '32px',
-          lineHeight: '32px'
+          overflow: 'visible',
+          textOverflow: 'clip',
+          whiteSpace: 'normal',
+          height: 'auto',
+          lineHeight: 'normal'
         }}
       >
-        {product.name}
+        {product.productName}
       </Typography>
       <Typography
         variant="body2"

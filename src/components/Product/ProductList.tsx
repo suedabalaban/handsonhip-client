@@ -2,8 +2,8 @@ import React from 'react';
 import { Grid, Card, CardContent, Typography, CardMedia, Box, Button } from '@mui/material';
 
 interface Product {
-  id: number;
-  name: string;
+  productID: number;
+  productName: string;
   description: string;
   imageUrl: string;
   price: number;
@@ -11,21 +11,21 @@ interface Product {
 
 interface ProductListProps {
   products: Product[];
-  onEditClick: (product: Product) => void; // Ensure onEditClick uses Product
+  onEditClick: (product: Product) => void;
 }
 
 const ProductList: React.FC<ProductListProps> = ({ products, onEditClick }) => {
   return (
     <Grid container spacing={2}>
       {products.map((product) => (
-        <Grid item key={product.id} xs={12} sm={6} md={4}>
+        <Grid item key={product.productID} xs={12} sm={6} md={4}>
           <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <Box sx={{ position: 'relative' }}>
               <CardMedia
                 component="img"
                 height="160"
                 image={product.imageUrl}
-                alt={product.name}
+                alt={product.productName}
                 sx={{ objectFit: 'cover' }}
               />
             </Box>
@@ -43,7 +43,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, onEditClick }) => {
                 variant="h6"
                 sx={{ marginBottom: '4px' }}
               >
-                {product.name}
+                {product.productName}
               </Typography>
               <Typography
                 variant="body2"
@@ -62,7 +62,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, onEditClick }) => {
                 {product.description}
               </Typography>
               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                ${product.price.toFixed(2)}
+                ${Number(product.price).toFixed(2)}
               </Typography>
               <Button
                 variant="contained"

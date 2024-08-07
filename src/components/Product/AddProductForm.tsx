@@ -1,90 +1,95 @@
-import * as React from 'react';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
-import Grid from '@mui/material/Grid';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import { styled } from '@mui/system';
+import React, { useState } from 'react';
+import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button } from '@mui/material';
 
-const FormGrid = styled(Grid)(() => ({
-  display: 'flex',
-  flexDirection: 'column',
-}));
-
-export default function AddProductForm() {
-  return (
-    <Grid container spacing={3}>
-      <FormGrid item xs={12} md={6}>
-        <FormLabel htmlFor="product-name" required>
-          Product Name
-        </FormLabel>
-        <OutlinedInput
-          id="product-name"
-          name="product-name"
-          type="text"
-          placeholder="Product Name"
-          autoComplete="product-name"
-          required
-        />
-      </FormGrid>
-      <FormGrid item xs={12} md={6}>
-        <FormLabel htmlFor="product-category" required>
-          Product Category
-        </FormLabel>
-        <OutlinedInput
-          id="product-category"
-          name="product-category"
-          type="text"
-          placeholder="Product Category"
-          autoComplete="product-category"
-          required
-        />
-      </FormGrid>
-      <FormGrid item xs={12}>
-        <FormLabel htmlFor="product-description" required>
-          Product Description
-        </FormLabel>
-        <OutlinedInput
-          id="product-description"
-          name="product-description"
-          type="text"
-          placeholder="Product Description"
-          autoComplete="product-description"
-          required
-        />
-      </FormGrid>
-      <FormGrid item xs={12} md={6}>
-        <FormLabel htmlFor="price" required>
-          Price
-        </FormLabel>
-        <OutlinedInput
-          id="price"
-          name="price"
-          type="number"
-          placeholder="Price"
-          autoComplete="price"
-          required
-        />
-      </FormGrid>
-      <FormGrid item xs={12} md={6}>
-        <FormLabel htmlFor="stock" required>
-          Stock
-        </FormLabel>
-        <OutlinedInput
-          id="stock"
-          name="stock"
-          type="number"
-          placeholder="Stock"
-          autoComplete="stock"
-          required
-        />
-      </FormGrid>
-      <FormGrid item xs={12}>
-        <FormControlLabel
-          control={<Checkbox name="available" value="yes" />}
-          label="Available"
-        />
-      </FormGrid>
-    </Grid>
-  );
+interface AddProductFormProps {
+  open: boolean;
+  onClose: () => void;
+  onSave: (product: { productName: string; description: string; imageUrl: string; price: number }) => Promise<void>;
 }
+
+const AddProductForm: React.FC<AddProductFormProps> = ({ open, onClose, onSave }) => {
+  const [productName, setProductName] = useState('');
+  const [description, setDescription] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [price, setPrice] = useState<number | ''>('');
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    if (name === 'productName') setProductName(value);
+    if (name === 'description') setDescription(value);
+    if (name === 'imageUrl') setImageUrl(value);
+    if (name === 'price') setPrice(Number(value) || '');
+  };
+
+  const handleSave = async () => {
+    // Form validation
+    if (!productName || !description || !imageUrl || price === '') {
+      alert('Please fill all fields.');
+      return;
+    }
+
+    try {
+      const newProduct = { productName, description, imageUrl, price };
+      await onSave(newProduct);
+      onClose(); // Close dialog after saving
+    } catch (error) {
+      console.error('Error saving product:', error);
+      alert('Failed to save product.');
+    }
+  };
+
+  return (
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle>Add Product</DialogTitle>
+      <DialogContent>
+        <TextField
+          autoFocus
+          margin="dense"
+          name="productName"
+          label="Product Name"
+          type="text"
+          fullWidth
+          variant="standard"
+          value={productName}
+          onChange={handleChange}
+        />
+        <TextField
+          margin="dense"
+          name="description"
+          label="Description"
+          type="text"
+          fullWidth
+          variant="standard"
+          value={description}
+          onChange={handleChange}
+        />
+        <TextField
+          margin="dense"
+          name="imageUrl"
+          label="Image URL"
+          type="text"
+          fullWidth
+          variant="standard"
+          value={imageUrl}
+          onChange={handleChange}
+        />
+        <TextField
+          margin="dense"
+          name="price"
+          label="Price"
+          type="number"
+          fullWidth
+          variant="standard"
+          value={price}
+          onChange={handleChange}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={handleSave}>Add</Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+export default AddProductForm;
