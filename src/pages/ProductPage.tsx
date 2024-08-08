@@ -8,6 +8,7 @@ import axios from 'axios';
 import ProductList from 'src/components/Product/ProductList';
 import ProductEditForm from 'src/components/Product/ProductEditForm';
 import AddProductForm from 'src/components/Product/AddProductForm';
+import { useNavigate } from 'react-router-dom';
 
 interface Product {
   productID: number;
@@ -24,6 +25,7 @@ export default function ProductPage() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
   const [addDialogOpen, setAddDialogOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -109,12 +111,18 @@ export default function ProductPage() {
       console.error('Error deleting product:', error);
     }
   };
+  const handleGenerateClick = (product: Product) => {
+    navigate('/checkout', { state: { product } });
+  };
+  const handleSelectProduct = (product: Product) => {
+    setSelectedProduct(product);
+  }
   return (
     <ThemeProvider theme={pageTheme}>
       <CssBaseline />
       <Container>
         <Box sx={{ padding: '20px' }}>
-          <ProductList products={products} onEditClick={handleEditClick} />
+          <ProductList products={products} onEditClick={handleEditClick} onGenerateClick={handleGenerateClick} onSelectProduct={handleSelectProduct} showSelectButton={false}/>
         </Box>
         {selectedProduct && (
           <ProductEditForm
