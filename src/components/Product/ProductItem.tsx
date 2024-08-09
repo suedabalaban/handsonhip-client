@@ -17,21 +17,22 @@ type ProductItemProps = {
 const ProductItem: React.FC<ProductItemProps> = ({ product, onClick }) => {
   return (
     <Paper
-      elevation={3}
-      sx={{
-        padding: '12px',
-        cursor: 'pointer',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        width: '100%',
-        maxWidth: '300px',
-        height: '100%',
-        overflow: 'hidden',
-        textAlign: 'center',
-        boxSizing: 'border-box'
-      }}
-      onClick={onClick}
+    elevation={3}
+    sx={{
+      padding: '12px',
+      cursor: 'pointer',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      width: '100%',
+      maxWidth: '300px', 
+      height: 'auto', 
+      maxHeight: '400px', 
+      overflow: 'hidden',
+      textAlign: 'center',
+      boxSizing: 'border-box'
+    }}
+    onClick={onClick}
     >
       <img
         src={product.imageUrl}

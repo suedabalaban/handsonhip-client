@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, TextField, DialogActions, Button, Box } from '@mui/material';
 
 interface AddProductFormProps {
   open: boolean;
@@ -22,7 +22,6 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ open, onClose, onSave }
   };
 
   const handleSave = async () => {
-    // Form validation
     if (!productName || !description || !imageUrl || price === '') {
       alert('Please fill all fields.');
       return;
@@ -39,50 +38,52 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ open, onClose, onSave }
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} fullWidth>
       <DialogTitle>Add Product</DialogTitle>
       <DialogContent>
-        <TextField
-          autoFocus
-          margin="dense"
-          name="productName"
-          label="Product Name"
-          type="text"
-          fullWidth
-          variant="standard"
-          value={productName}
-          onChange={handleChange}
-        />
-        <TextField
-          margin="dense"
-          name="description"
-          label="Description"
-          type="text"
-          fullWidth
-          variant="standard"
-          value={description}
-          onChange={handleChange}
-        />
-        <TextField
-          margin="dense"
-          name="imageUrl"
-          label="Image URL"
-          type="text"
-          fullWidth
-          variant="standard"
-          value={imageUrl}
-          onChange={handleChange}
-        />
-        <TextField
-          margin="dense"
-          name="price"
-          label="Price"
-          type="number"
-          fullWidth
-          variant="standard"
-          value={price}
-          onChange={handleChange}
-        />
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <TextField
+            autoFocus
+            margin="dense"
+            name="productName"
+            label="Product Name"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={productName}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            name="description"
+            label="Description"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={description}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            name="imageUrl"
+            label="Image URL"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={imageUrl}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            name="price"
+            label="Price"
+            type="number"
+            fullWidth
+            variant="standard"
+            value={price}
+            onChange={handleChange}
+          />
+        </Box>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>

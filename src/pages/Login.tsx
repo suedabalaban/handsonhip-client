@@ -12,9 +12,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { login } from '../api/auth'; // Import yolu güncellenmiş
+import { login } from '../api/auth';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirecting to SignUp page
-
 const defaultTheme = createTheme();
 
 export default function Login() {

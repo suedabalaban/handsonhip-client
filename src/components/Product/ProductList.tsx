@@ -12,14 +12,19 @@ interface Product {
 interface ProductListProps {
   products: Product[];
   onEditClick: (product: Product) => void;
+  onGenerateClick: (product: Product) => void;
+  onSelectProduct: (product: Product) => void;
+  showEditButton?: boolean;
+  showSelectButton?: boolean;
+  showGenerateButton?: boolean;
 }
 
-const ProductList: React.FC<ProductListProps> = ({ products, onEditClick }) => {
+const ProductList: React.FC<ProductListProps> = ({ products, onEditClick, onGenerateClick, onSelectProduct, showGenerateButton = true, showEditButton = true, showSelectButton = true }) => {
   return (
     <Grid container spacing={2}>
       {products.map((product) => (
         <Grid item key={product.productID} xs={12} sm={6} md={4}>
-          <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <Card sx={{ display: 'flex', flexDirection: 'column',height: '100%', maxWidth: '300px' }}>
             <Box sx={{ position: 'relative' }}>
               <CardMedia
                 component="img"
@@ -64,14 +69,38 @@ const ProductList: React.FC<ProductListProps> = ({ products, onEditClick }) => {
               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                 ${Number(product.price).toFixed(2)}
               </Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{ marginTop: 'auto' }}
-                onClick={() => onEditClick(product)}
-              >
-                Edit
-              </Button>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto' }}>
+              {showSelectButton && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ marginTop: 'auto' }}
+                  onClick={() => onSelectProduct(product)}
+                >
+                  Select
+                </Button>
+              )}
+                {showEditButton && (
+                <Button
+                  variant="contained"
+                  color="inherit"
+                  sx={{ marginTop: '8px' }}
+                  onClick={() => onEditClick(product)}
+                >
+                  Edit
+                  </Button>
+                )}
+                {showGenerateButton && (
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    sx={{ marginTop: '8px' }}
+                    onClick={() => onGenerateClick(product)}
+                  >
+                    Generate
+                  </Button>
+                )}
+              </Box>
             </CardContent>
           </Card>
         </Grid>
