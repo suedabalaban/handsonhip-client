@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import HomePage from './pages/HomePage';
+
 import SignUp from './pages/SignUp';
-import Login from './pages/Login';
+import SignIn from './pages/SignInSide';
 import ProductPage from './pages/ProductPage';
-import Checkout from './pages/Checkout';
+import Generate from './pages/Generate'
 
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/products" element={<ProductPage />} />
-        <Route path="/checkout" element={<Checkout />} />
+        <Route path ="/generate" element = {<Generate />} />
       </Routes>
     </Router>
   );
