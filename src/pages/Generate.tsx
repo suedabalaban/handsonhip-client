@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Grid, Button, Box, Typography, Stepper, Step, StepLabel, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import ProductList from 'src/components/Product/ProductList';
 import ProductDetails from 'src/components/Product/ProductDetails';
-import GenerateAdContent from 'src/components/Checkout/GenerateAdContent';
+import GenerateAdContent from 'src/components/Generate/GenerateAdContent';
 import getPageTheme from 'src/theme/getPageTheme';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
@@ -20,12 +20,12 @@ interface Product {
 
 const steps = ['Select Product', 'View Product Details', 'Generate Ad Content'];
 
-export default function Checkout() {
+export default function Generate() {
   const [mode] = useState<'light' | 'dark'>('light');
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [activeStep, setActiveStep] = useState(0);
-  const checkoutTheme = createTheme(getPageTheme(mode));
+  const generateTheme = createTheme(getPageTheme(mode));
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function Checkout() {
   };
 
   const handleGenerateClick = (product: Product) => {
-    navigate('/checkout', { state: { product } });
+    navigate('/generate', { state: { product } });
   };
 
   const getStepContent = (step: number) => {
@@ -85,7 +85,7 @@ export default function Checkout() {
   };
 
   return (
-    <ThemeProvider theme={checkoutTheme}>
+    <ThemeProvider theme={generateTheme}>
       <CssBaseline />
       <Grid container sx={{ height: '100vh' }}>
         <Grid item xs={12} sm={5} lg={4} sx={{ display: 'flex', flexDirection: 'column', backgroundColor: 'background.paper', borderRight: '1px solid', borderColor: 'divider', alignItems: 'start', pt: 4, px: 6, gap: 4 }}>
@@ -97,7 +97,7 @@ export default function Checkout() {
           <Typography variant="h2" sx={{ ml: 2 }}>Generate Marketing Content</Typography>
           <Box sx={{ mt: 4, mb: 2 }}>
             <Typography variant="body2" color="text.secondary">
-              This checkout page allows you to select a product, view its details, and generate marketing content using AI. Follow the steps to complete the process.
+              This generate page allows you to select a product, view its details, and generate marketing content using AI. Follow the steps to complete the process.
             </Typography>
           </Box>
         </Grid>
@@ -116,7 +116,7 @@ export default function Checkout() {
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
                 <Typography variant="h1">📦</Typography>
                 <Typography variant="h5">You can find your updated item in your products!</Typography>
-                <Button variant="contained" sx={{ mt: 2 }}>Go to my products</Button>
+                <Button href="/products" variant="contained" sx={{ mt: 2 }}>Go to my products</Button>
               </Box>
             ) : (
               <>

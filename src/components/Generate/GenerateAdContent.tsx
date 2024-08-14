@@ -15,14 +15,25 @@ interface GenerateAdContentProps {
 
 const GenerateAdContent: React.FC<GenerateAdContentProps> = ({ product }) => {
   if (!product) {
-    return <Typography>No product selected</Typography>;
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+        <Typography>No product selected</Typography>
+      </Box>
+    );
   }
 
-  // Örnek olarak sabit bir içerik gösterebiliriz. Burada reklam içeriğini dinamik olarak oluşturabilirsiniz.
   return (
-    <Box>
-      <Typography variant="h6">Generate Ad Content for:</Typography>
-      <Typography variant="h5">{product.productName}</Typography>
+    <Box
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="25vh"
+      textAlign="center"
+      gap={2} 
+    >
+      <Typography variant="h5">Generate Ad Content for:</Typography>
+      <Typography variant="h6">{product.productName}</Typography>
       <Button variant="contained">Generate Content</Button>
     </Box>
   );

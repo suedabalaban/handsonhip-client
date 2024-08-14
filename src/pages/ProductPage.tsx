@@ -112,7 +112,7 @@ export default function ProductPage() {
     }
   };
   const handleGenerateClick = (product: Product) => {
-    navigate('/checkout', { state: { product } });
+    navigate('/generate', { state: { product } });
   };
   const handleSelectProduct = (product: Product) => {
     setSelectedProduct(product);
