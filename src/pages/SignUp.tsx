@@ -17,6 +17,7 @@ import ToggleColorMode from 'src/components/ToggleColorMode';
 import getSignUpTheme from 'src/theme/getSignUpTheme';
 import { register } from 'src/api/auth';
 import { useNavigate } from 'react-router-dom';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -62,13 +63,11 @@ export default function SignUp() {
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-  const [nameError, setNameError] = React.useState(false);
-  const [nameErrorMessage, setNameErrorMessage] = React.useState('');
+  const [termsChecked, setTermsChecked] = React.useState(false);
 
   const validateInputs = () => {
     const email = document.getElementById('email') as HTMLInputElement;
     const password = document.getElementById('password') as HTMLInputElement;
-    const name = document.getElementById('name') as HTMLInputElement;
 
     let isValid = true;
 
@@ -90,15 +89,6 @@ export default function SignUp() {
       setPasswordErrorMessage('');
     }
 
-    if (!name.value || name.value.length < 1) {
-      setNameError(true);
-      setNameErrorMessage('Name is required.');
-      isValid = false;
-    } else {
-      setNameError(false);
-      setNameErrorMessage('');
-    }
-
     return isValid;
   };
 
@@ -108,7 +98,7 @@ export default function SignUp() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!validateInputs()) return;
+    if (!validateInputs() || !termsChecked) return;
 
     const data = new FormData(event.currentTarget);
 
@@ -144,7 +134,15 @@ export default function SignUp() {
             p: { xs: 2, sm: 4 },
           }}
         >
-         <Box sx={{ position: { xs: 'relative', md: 'absolute' } }}>
+          <Button
+            sx={{ display: 'flex', alignItems: 'center' }}
+            startIcon={<ArrowBackRoundedIcon />}
+            component="a"
+            href="/"
+          >
+            Do you have an account? Sign in
+          </Button>
+          <Box sx={{ position: { xs: 'relative', sm: 'absolute' }, right: 0 ,mr:2}}>
             <ToggleColorMode
               mode={mode}
               toggleColorMode={toggleColorMode}
@@ -162,7 +160,7 @@ export default function SignUp() {
             <Typography
               component="h1"
               variant="h4"
-              sx={{ mb:0,fontFamily:'sans-serif',width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)'}}
+              sx={{ mb:0, fontFamily: 'sans-serif', width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
             >
               Sign up
             </Typography>
@@ -181,8 +179,6 @@ export default function SignUp() {
                     fullWidth
                     id="firstName"
                     placeholder="John"
-                    error={nameError}
-                    helperText={nameErrorMessage}
                   />
                 </FormControl>
                 <FormControl fullWidth>
@@ -230,6 +226,7 @@ export default function SignUp() {
                   fullWidth
                   id="address"
                   placeholder="1234 Main St"
+                  autoComplete="street-address"
                 />
               </FormControl>
               <Stack direction="row" spacing={2}>
@@ -240,6 +237,7 @@ export default function SignUp() {
                     fullWidth
                     id="country"
                     placeholder="USA"
+                    autoComplete="country-name"
                   />
                 </FormControl>
                 <FormControl fullWidth>
@@ -249,19 +247,19 @@ export default function SignUp() {
                     fullWidth
                     id="city"
                     placeholder="New York"
+                    autoComplete="address-level2"
                   />
                 </FormControl>
               </Stack>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                sx={{ mt: 2 }}
-              >
-                Sign Up
-              </Button>
               <FormControlLabel
-                control={<Checkbox value="agree" color="primary" />}
+                control={
+                  <Checkbox
+                    checked={termsChecked}
+                    onChange={(e) => setTermsChecked(e.target.checked)}
+                    value="agree"
+                    color="primary"
+                  />
+                }
                 label={
                   <Typography variant="body2">
                     I agree to the{' '}
@@ -272,6 +270,15 @@ export default function SignUp() {
                   </Typography>
                 }
               />
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                sx={{ mt: 0 }}
+                disabled={!termsChecked}
+              >
+                Sign Up
+              </Button>
             </Box>
           </Card>
         </Stack>
