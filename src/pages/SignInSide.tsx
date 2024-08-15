@@ -59,6 +59,7 @@ function SignInCard({ onLoginSuccess }: { onLoginSuccess: (email: string, passwo
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -72,17 +73,18 @@ function SignInCard({ onLoginSuccess }: { onLoginSuccess: (email: string, passwo
     const data = new FormData(event.currentTarget);
     const email = data.get('email') as string;
     const password = data.get('password') as string;
-
+  
     if (validateInputs(email, password)) {
       try {
-        await login(email, password);
-        onLoginSuccess(email, password);  
+        const loginSuccessful = await login(email, password);
+        if (loginSuccessful) {
+          onLoginSuccess(email, password);
+        }
       } catch (error) {
         console.error('Login failed', error);
       }
     }
   };
-
   const validateInputs = (email: string, password: string) => {
     let isValid = true;
 
@@ -115,7 +117,7 @@ function SignInCard({ onLoginSuccess }: { onLoginSuccess: (email: string, passwo
       <Typography
         component="h1"
         variant="h4"
-        sx={{ fontFamily:'sans-serif', width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' , textAlign: "center"}}
+        sx={{ fontFamily:'sans-serif', width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
       >
         Sign in
       </Typography>
@@ -151,6 +153,7 @@ function SignInCard({ onLoginSuccess }: { onLoginSuccess: (email: string, passwo
               onClick={handleClickOpen}
               variant="body2"
               sx={{ fontSize: '0.875rem' }}
+              tabIndex={-1}
             >
               Forgot your password?
             </Link>
@@ -191,6 +194,7 @@ function SignInCard({ onLoginSuccess }: { onLoginSuccess: (email: string, passwo
   );
 }
 
+
 export default function SignInSide() {
   const [mode, setMode] = React.useState<PaletteMode>(
     localStorage.getItem('themeMode') as PaletteMode || 'light'
@@ -207,13 +211,8 @@ export default function SignInSide() {
     });
   };
 
-  const handleLoginSuccess = async (email: string, password: string) => {
-    try {
-      await login(email, password);
-      navigate('/');  
-    } catch (error) {
-      console.error('Login error:', error);  
-    }
+  const handleLoginSuccess = (email: string, password: string) => {
+    navigate('/products'); 
   };
 
   return (
