@@ -1,6 +1,6 @@
 const apiUrl: string = process.env.REACT_APP_API_URL || '';
 
-export const login = async (email: string, password: string) => {
+export const login = async (email: string, password: string): Promise<boolean> => {
   try {
     const response = await fetch(`${apiUrl}/member/login`, {
       method: 'POST',
@@ -17,10 +17,13 @@ export const login = async (email: string, password: string) => {
 
     const data = await response.json();
     console.log('Login successful:', data);
+    return true; 
   } catch (error) {
     console.error('Login error:', error);
+    return false; 
   }
 };
+
 
 export const logout = async () => {
   try {
