@@ -16,6 +16,7 @@ export const login = async (email: string, password: string): Promise<boolean> =
     }
 
     const data = await response.json();
+    localStorage.setItem('token', data.token); //store the token for jwt authentication
     console.log('Login successful:', data);
     return true; 
   } catch (error) {
@@ -27,6 +28,7 @@ export const login = async (email: string, password: string): Promise<boolean> =
 
 export const logout = async () => {
   try {
+    localStorage.removeItem('token');
     const response = await fetch(`${apiUrl}/member/logout`, {
       method: 'POST',
       headers: {
