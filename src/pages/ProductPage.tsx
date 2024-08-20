@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ThemeProvider, Container, Box, Button } from '@mui/material';
+import { ThemeProvider, Container, Box, Button, Typography } from '@mui/material';
 import getPageTheme from 'src/theme/getPageTheme';
 import { PaletteMode } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,6 +9,7 @@ import ProductList from 'src/components/Product/ProductList';
 import ProductEditForm from 'src/components/Product/ProductEditForm';
 import AddProductForm from 'src/components/Product/AddProductForm';
 import { useNavigate } from 'react-router-dom';
+import { logout } from 'src/api/auth';
 
 interface Product {
   productID: number;
@@ -28,10 +29,18 @@ export default function ProductPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login'); // Redirect to login if no token found
+      return;
+    }
     const fetchProducts = async () => {
       try {
         const response = await axios.get('http://localhost:8080/api/product', {
           withCredentials: true,
+          headers: {
+            'Authorization': `Bearer ${token}` // Include token in header
+          }
         });
         setProducts(response.data);
       } catch (error) {
@@ -40,7 +49,7 @@ export default function ProductPage() {
     };
 
     fetchProducts();
-  }, []);
+  }, [navigate]);
 
   const handleEditClick = (product: Product) => {
     setSelectedProduct(product);
@@ -52,7 +61,13 @@ export default function ProductPage() {
     setSelectedProduct(null);
   };
 
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login'); 
+  };
+
   const handleSaveProduct = async (updatedProduct: Product) => {
+    const token = localStorage.getItem('token');
     try {
       if (!updatedProduct.productID) {
         console.error('Product ID is missing');
@@ -61,6 +76,9 @@ export default function ProductPage() {
 
       const response = await axios.put(`http://localhost:8080/api/product/${updatedProduct.productID}`, updatedProduct, {
         withCredentials: true,
+        headers: {
+          'Authorization': `Bearer ${token}` // Include token in header
+        }
       });
 
       setProducts((prevProducts) =>
@@ -82,9 +100,13 @@ export default function ProductPage() {
   };
 
   const handleSaveProductAdd = async (newProduct: { productName: string; description: string; imageUrl: string; price: number }) => {
+    const token = localStorage.getItem('token');
     try {
       const response = await axios.post('http://localhost:8080/api/product', newProduct, {
         withCredentials: true,
+        headers: {
+          'Authorization': `Bearer ${token}` // Include token in header
+        }
       });
 
       setProducts((prevProducts) => [...prevProducts, response.data]);
@@ -96,10 +118,15 @@ export default function ProductPage() {
       console.error('Error adding product:', error);
     }
   };
+
   const handleDeleteProduct = async (productID: number) => {
+    const token = localStorage.getItem('token');
     try {
       await axios.delete(`http://localhost:8080/api/product/${productID}`, {
         withCredentials: true,
+        headers: {
+          'Authorization': `Bearer ${token}` // Include token in header
+        }
       });
   
       setProducts((prevProducts) =>
@@ -111,18 +138,58 @@ export default function ProductPage() {
       console.error('Error deleting product:', error);
     }
   };
+
   const handleGenerateClick = (product: Product) => {
     navigate('/generate', { state: { product } });
   };
+
   const handleSelectProduct = (product: Product) => {
     setSelectedProduct(product);
-  }
+  };
+
   return (
     <ThemeProvider theme={pageTheme}>
       <CssBaseline />
       <Container>
+        <Box sx={{ padding: '20px 0' }}>
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            mr: 6
+          }}>
+            <Typography variant="h1">My Products</Typography>
+          </Box>
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center'
+          }}>
+            <Button
+              variant="contained"
+              color="info"
+              onClick={() => setAddDialogOpen(true)}
+              sx={{ color: '#ffffff', backgroundColor: '#c6a85a' }}
+            >
+              Add Product
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={handleLogout}
+              sx={{ color: '#ffffff', backgroundColor: '#d15d6b' }}
+            >
+              Logout
+            </Button>
+          </Box>
+        </Box>
         <Box sx={{ padding: '20px' }}>
-          <ProductList products={products} onEditClick={handleEditClick} onGenerateClick={handleGenerateClick} onSelectProduct={handleSelectProduct} showSelectButton={false}/>
+          <ProductList
+            products={products}
+            onEditClick={handleEditClick}
+            onGenerateClick={handleGenerateClick}
+            onSelectProduct={handleSelectProduct}
+            showSelectButton={false}
+          />
         </Box>
         {selectedProduct && (
           <ProductEditForm
@@ -138,14 +205,6 @@ export default function ProductPage() {
           onClose={handleAddDialogClose}
           onSave={handleSaveProductAdd}
         />
-        <Button
-            variant="contained"
-            color="primary"
-            onClick={() => setAddDialogOpen(true)}
-            sx={{ marginBottom: '20px' }}
-          >
-            Add Product
-          </Button>
       </Container>
     </ThemeProvider>
   );
