@@ -1,4 +1,5 @@
 const apiUrl: string = process.env.REACT_APP_API_URL || '';
+const token = localStorage.getItem('token');
 
 export const fetchProducts = async () => {
   try {
@@ -6,6 +7,7 @@ export const fetchProducts = async () => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, // Attach token
       },
       credentials: 'include',
     });
@@ -27,6 +29,7 @@ export const fetchProductById = async (id: number) => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, // Attach token
       },
       credentials: 'include',
     });
@@ -49,6 +52,7 @@ export const createProduct = async (product: any) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, // Attach token
       },
       body: JSON.stringify(product),
       credentials: 'include',
@@ -72,6 +76,7 @@ export const updateProduct = async (id: number, product: any) => {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, // Attach token
       },
       body: JSON.stringify(product),
       credentials: 'include',
@@ -95,6 +100,7 @@ export const deleteProduct = async (id: number) => {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, // Attach token
       },
       credentials: 'include',
     });
