@@ -73,7 +73,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, onEditClick, onGene
               {showSelectButton && (
                 <Button
                   variant="contained"
-                  color="primary"
+                  color="info"
                   sx={{ marginTop: 'auto' }}
                   onClick={() => onSelectProduct(product)}
                 >
@@ -83,8 +83,8 @@ const ProductList: React.FC<ProductListProps> = ({ products, onEditClick, onGene
                 {showEditButton && (
                 <Button
                   variant="contained"
-                  color="inherit"
-                  sx={{ marginTop: '8px' }}
+                  color="success"
+                  sx={{ marginTop: '8px' , color: '#ffffff' ,backgroundColor: '#7bbf76', }}
                   onClick={() => onEditClick(product)}
                 >
                   Edit
@@ -94,7 +94,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, onEditClick, onGene
                   <Button
                     variant="contained"
                     color="secondary"
-                    sx={{ marginTop: '8px' }}
+                    sx={{ marginTop: '8px' , color: '#ffffff', backgroundColor: '#7a9ddf',}}
                     onClick={() => onGenerateClick(product)}
                   >
                     Generate

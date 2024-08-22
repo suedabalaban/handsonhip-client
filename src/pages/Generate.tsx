@@ -29,9 +29,14 @@ export default function Generate() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/product', { withCredentials: true });
+        const response = await axios.get('http://localhost:8080/api/product', { 
+          withCredentials: true,
+          headers: {
+            'Authorization': `Bearer ${token}` // Include token in header
+          } });
         setProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -121,16 +126,18 @@ export default function Generate() {
             ) : (
               <>
                 {getStepContent(activeStep)}
-                <Box sx={{ display: 'flex', flexDirection: { xs: 'column-reverse', sm: 'row' }, justifyContent: activeStep !== 0 ? 'space-between' : 'flex-end', alignItems: 'end', flexGrow: 1, gap: 1, pb: { xs: 12, sm: 0 }, mt: { xs: 2, sm: 0 }, mb: '60px' }}>
+                <Box sx={{ display: 'flex', flexDirection: { xs: 'column-reverse', sm: 'row' }, justifyContent: activeStep !== 0 ? 'space-between' : 'flex-end', alignItems: 'end', flexGrow: 1, gap: 1, pb: { xs: 12, sm: 0 }, mt: { xs: 2, sm: 0 }, mb: '60px' , position: 'absolute', bottom: 50, right: 0, padding: '20px'}}>
                   {activeStep !== 0 && (
                     <Button startIcon={<ChevronLeftRoundedIcon />} onClick={handleBack} variant="text" sx={{ display: { xs: 'none', sm: 'flex' } }}>Previous</Button>
                   )}
                   {activeStep !== 0 && (
                     <Button startIcon={<ChevronLeftRoundedIcon />} onClick={handleBack} variant="outlined" fullWidth sx={{ display: { xs: 'flex', sm: 'none' } }}>Previous</Button>
                   )}
-                  <Button variant="contained" endIcon={<ChevronRightRoundedIcon />} onClick={handleNext} sx={{ width: { xs: '100%', sm: 'fit-content' } }}>
-                    {activeStep === steps.length - 1 ? 'Complete' : 'Next'}
-                  </Button>
+                  {activeStep !== 0 && (
+                    <Button variant="contained" endIcon={<ChevronRightRoundedIcon />} onClick={handleNext} sx={{ width: { xs: '100%', sm: 'fit-content' } }}>
+                      {activeStep === steps.length - 1 ? 'Complete' : 'Next'}
+                    </Button>
+                  )}
                 </Box>
               </>
             )}
